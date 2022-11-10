@@ -1,6 +1,8 @@
 from django.test import TestCase
 from blog.models import Post
 from django.contrib.auth.models import User
+from django.urls import reverse
+
 
 
 class ModelMixinTestCase(TestCase):
@@ -8,7 +10,9 @@ class ModelMixinTestCase(TestCase):
         self.user = User.objects.create_user(
             username="kaaviya",
             password="123",
-        )
+
+            )   
+        self.published_queryset = Post.published.all()
 
         self.draft_post = Post.objects.create(
             title="description",
