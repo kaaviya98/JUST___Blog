@@ -9,6 +9,10 @@ class TestListView(ModelMixinTestCase, TestCase):
 
         self.assertTemplateUsed(response, "blog/post/list.html")
 
+    def test_pagination_returns_last_page_if_page_out_of_range(self):
+        response = self.client.get(reverse('blog:post_list'),  {"page":999, "posts": ""})
+        self.assertEquals(response.context['posts'].number, response.context['posts'].paginator.page(1).number)
+
 
 class TestDetailView(ModelMixinTestCase, TestCase):
     def test_post_detail_template_used(self):
