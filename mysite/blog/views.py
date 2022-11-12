@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from .forms import EmailPostForm, CommentForm
 from django.contrib import messages
+from taggit.models import Tag
 
 
 class PostListView(ListView):
@@ -55,6 +56,22 @@ def post_detail(request, year, month, day, post):
         {"post": post, "comment_form": CommentForm},
     )
 
+class PostListByTagview(ListView):
+    context_object_name = "posts"
+    paginate_by = 3
+    template_name = "blog/post/list.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        self.tag = get_object_or_404(Tag, slug=self.kwargs.get("tag_slug"))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return Post.published.filter(tags__in=[self.tag])
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["tag"] = self.tag
+        return data
 
 class PostShareView(SuccessMessageMixin, FormView):
     form_class = EmailPostForm
