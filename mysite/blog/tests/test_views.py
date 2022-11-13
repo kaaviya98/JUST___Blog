@@ -45,6 +45,11 @@ class TestDetailView(ModelMixinTestCase, TestCase):
                 ],
             )
         )
+        
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(
+            Post.objects.first().title, "Two"
+        )
 
         self.assertTemplateUsed(response, "blog/post/detail.html")
 
