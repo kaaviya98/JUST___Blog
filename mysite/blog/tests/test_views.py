@@ -67,3 +67,13 @@ class TestDetailView(ModelMixinTestCase, TestCase):
         response = self.client.get(incorrect_post_detail_url)
 
         self.assertEqual(404, response.status_code)
+
+class Test_TagListViews(ModelMixinTestCase, TestCase):
+    def test_tag_list_view(self):
+        response = self.client.get(self.post_list_by_tag )
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(
+            self.tag.slug, "test"
+        )
+

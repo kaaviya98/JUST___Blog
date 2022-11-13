@@ -53,7 +53,11 @@ def post_detail(request, year, month, day, post):
     return render(
         request,
         "blog/post/detail.html",
-        {"post": post, "comment_form": CommentForm},
+        {
+            "post": post,
+            "comment_form": comment_form,
+            "similar_posts": post.get_top_four_similar_posts(),
+        },
     )
 
 
@@ -102,3 +106,4 @@ class PostShareView(SuccessMessageMixin, FormView):
             subject=f"{valid_data['from_name']} recommends you read {self.post_object.title}",
             recipient_list=[valid_data["to_email"]],
         )
+    

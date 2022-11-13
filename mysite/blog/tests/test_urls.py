@@ -1,7 +1,9 @@
 from django.test import SimpleTestCase
 from django.urls import resolve, reverse
-from blog.views import PostListView, post_detail, PostShareView
+from blog.views import PostListView, post_detail, PostShareView,post_share,PostListByTagview
 from blog.tests.test_modelmixintestcase import ModelMixinTestCase
+
+
 
 
 class TestUrls(ModelMixinTestCase, SimpleTestCase):
@@ -25,6 +27,9 @@ class TestUrls(ModelMixinTestCase, SimpleTestCase):
             ).func,
             post_detail,
         )
+
+    def test_post_list_by_tag_is_resolved(self):
+        self.assertEquals(resolve(self.post_list_by_tag).func.view_class, PostListByTagview)
 
     def test_post_share_url_is_resolved(self):
         self.assertEquals(
