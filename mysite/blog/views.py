@@ -7,6 +7,9 @@ from django.contrib.messages.views import SuccessMessageMixin
 from .forms import EmailPostForm, CommentForm
 from django.contrib import messages
 from taggit.models import Tag
+from django.contrib.postgres.search import SearchVector
+from blog.forms import EmailPostForm, CommentForm, SearchForm
+from django.contrib.postgres.search import TrigramSimilarity
 
 
 class PostListView(ListView):
@@ -106,3 +109,26 @@ class PostShareView(SuccessMessageMixin, FormView):
             subject=f"{valid_data['from_name']} recommends you read {self.post_object.title}",
             recipient_list=[valid_data["to_email"]],
         )
+
+def post_search(request):
+    form = SearchForm()
+    query = None
+    results = []
+
+    if "query" in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data["query"]
+            results = (
+                Post.published.annotate(
+                    similarity=TrigramSimilarity("title", query),
+                )
+                .filter(similarity__gt=0.1)
+                .order_by("-similarity")
+            )
+
+    return render(
+        request,
+        "blog/post/search.html",
+        {"form": form, "query": query, "results": results},
+    )
