@@ -1,6 +1,6 @@
 from django.test import TestCase
 from blog.models import Post
-from blog.tests.test_ModelMixinTestCase import ModelMixinTestCase
+from blog.tests.test_modelmixintestcase import ModelMixinTestCase
 
 
 class TestPublishedManager(ModelMixinTestCase,TestCase):
