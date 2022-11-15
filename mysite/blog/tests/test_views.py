@@ -1,29 +1,21 @@
-from django.test import TestCase, Client
-from blog.models import Post
-from django.contrib.auth.models import User
+from django.test import TestCase
 from django.urls import reverse
-from blog.tests.test_ModelMixinTestCase import ModelMixinTestCase
+from blog.tests.test_modelmixintestcase import ModelMixinTestCase
 
 
-class Test_listViews(ModelMixinTestCase,TestCase):
+class ListView(ModelMixinTestCase,TestCase):
 
     def test_post_list_GET(self):
-        response = self.client.get(self.list_url)
+        response = self.client.get(self.post_list_url)
 
-        self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, "blog/post/list.html")
 
-class Test_DetailViews(ModelMixinTestCase,TestCase):
+class DetailView(ModelMixinTestCase,TestCase):
 
 
     def test_post_detail_template_used(self):
         response = self.client.get(self.post_detail_url)
         
-        self.assertEqual(200, response.status_code)
-        self.assertEqual(
-            Post.objects.first().title, "Test post thats status=published"
-        )
-
         self.assertTemplateUsed(response, "blog/post/detail.html")
 
     
@@ -43,6 +35,6 @@ class Test_DetailViews(ModelMixinTestCase,TestCase):
                  incorrect_slug
                  ]
         )
-        unsuccessful_response = self.client.get(incorrect_post_detail_url)
+        response = self.client.get(incorrect_post_detail_url)
 
-        self.assertEqual(404, unsuccessful_response.status_code)
+        self.assertEqual(404,response.status_code)

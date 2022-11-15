@@ -6,7 +6,7 @@ from blog.tests.test_modelmixintestcase import ModelMixinTestCase
 
 class TestUrls(ModelMixinTestCase,SimpleTestCase):
     def test_post_list_url_is_resolved(self):
-        self.assertEquals(resolve(self.list_url).func, post_list)
+        self.assertEquals(resolve(self.post_list_url).func, post_list)
     
     def test_post_detail_url_is_resolved(self):
         self.assertEquals(resolve(self.post_detail_url).func, post_detail)
