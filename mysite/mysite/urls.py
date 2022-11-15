@@ -18,9 +18,5 @@ from django.contrib import admin
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-<<<<<<< HEAD
-]
-=======
     path("blog/", include("blog.urls", namespace="blog")),
 ]
->>>>>>> 467f361 ( Create_list_view_and_detail_view_for_blog)
