@@ -1,9 +1,9 @@
-from blog.tests.test_ModelMixinTestCase import ModelMixinTestCase
+from blog.tests.test_modelmixintestcase import ModelMixinTestCase
 from django.test import TestCase
-from django.urls import reverse, resolve
+from django.urls import reverse
 
 
-class Test_model_method(ModelMixinTestCase, TestCase):
+class TestModelMethod(ModelMixinTestCase, TestCase):
     def test_absolute_url_in_model(self):
         self.assertEqual(
             reverse(
