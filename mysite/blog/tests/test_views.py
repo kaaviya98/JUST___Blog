@@ -3,16 +3,27 @@ from django.urls import reverse
 from blog.tests.test_modelmixintestcase import ModelMixinTestCase
 
 
-class ListView(ModelMixinTestCase, TestCase):
+class TestListView(ModelMixinTestCase, TestCase):
     def test_post_list_GET(self):
-        response = self.client.get(self.post_list_url)
+        response = self.client.get(reverse("blog:post_list"))
 
         self.assertTemplateUsed(response, "blog/post/list.html")
 
 
-class DetailView(ModelMixinTestCase, TestCase):
+class TestDetailView(ModelMixinTestCase, TestCase):
     def test_post_detail_template_used(self):
-        response = self.client.get(self.post_detail_url)
+
+        response = self.client.get(
+            reverse(
+                "blog:post_detail",
+                args=[
+                    self.published_post.publish.year,
+                    self.published_post.publish.month,
+                    self.published_post.publish.day,
+                    self.published_post.slug,
+                ],
+            )
+        )
 
         self.assertTemplateUsed(response, "blog/post/detail.html")
 

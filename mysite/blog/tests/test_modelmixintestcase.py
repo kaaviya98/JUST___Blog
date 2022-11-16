@@ -25,13 +25,3 @@ class ModelMixinTestCase(TestCase):
             status="published",
             slug="testing-title",
         )
-        self.post_list_url = reverse("blog:post_list")
-        self.post_detail_url = reverse(
-            "blog:post_detail",
-            args=[
-                self.published_post.publish.year,
-                self.published_post.publish.month,
-                self.published_post.publish.day,
-                self.published_post.slug,
-            ],
-        )
