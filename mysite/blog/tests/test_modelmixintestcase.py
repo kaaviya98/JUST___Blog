@@ -2,6 +2,7 @@ from django.test import TestCase
 from blog.models import Post
 from django.contrib.auth.models import User
 
+
 class ModelMixinTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
