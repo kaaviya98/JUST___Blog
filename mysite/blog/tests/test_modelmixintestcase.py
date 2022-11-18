@@ -36,5 +36,3 @@ class ModelMixinTestCase(TestCase):
             )
             posts.append(post)
         return posts
-
-    # self.posts=create_published_posts(count=4)
