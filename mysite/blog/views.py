@@ -3,7 +3,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post
 
 
-def paginate(paginator, page):
+def paginate(queryset, page, per_page):
+    paginator = Paginator(queryset, per_page)
     try:
         posts = paginator.page(page)
     except PageNotAnInteger:
@@ -15,14 +16,13 @@ def paginate(paginator, page):
 
 
 def post_list(request):
-    published_post = Post.published.all()
-    paginator = Paginator(published_post, 3)
-    page = request.GET.get("page")
 
-    posts = paginate(paginator, page)
+    posts = paginate(Post.published.all(), request.GET.get("page"), 3)
 
     return render(
-        request, "blog/post/list.html", {"page": page, "posts": posts}
+        request,
+        "blog/post/list.html",
+        {"page": request.GET.get("page"), "posts": posts},
     )
 
 

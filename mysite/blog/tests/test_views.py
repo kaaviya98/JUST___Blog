@@ -13,7 +13,7 @@ class TestListView(ModelMixinTestCase, TestCase):
     def test_pagination_returns_last_page_if_page_out_of_range(self):
         response = self.client.get(
             reverse("blog:post_list"),
-            {"page": 999, "posts": Post.published.all()},
+            {"page": 999, "posts": self.create_published_posts(4)},
         )
         self.assertEquals(
             response.context["posts"].number,
@@ -23,7 +23,7 @@ class TestListView(ModelMixinTestCase, TestCase):
     def test_pagination_returns_first_page_if_page_is_empty(self):
         response = self.client.get(
             reverse("blog:post_list"),
-            {"page": "", "posts": Post.published.all()},
+            {"page": "", "posts": self.create_published_posts(4)},
         )
         self.assertEquals(
             response.context["posts"].number,
