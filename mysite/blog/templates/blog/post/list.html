@@ -4,6 +4,13 @@
 {% endblock %}
 {% block content %}
     <h1>My Blog</h1>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     {% for post in posts %}
         <h2>
         <a href="{{post.get_absolute_url}}">{{ post.title }}</a>
