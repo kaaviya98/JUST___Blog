@@ -21,5 +21,4 @@ urlpatterns = [
         views.PostListByTagview.as_view(),
         name="post_list_by_tag",
     ),
-    
 ]

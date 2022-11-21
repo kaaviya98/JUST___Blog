@@ -56,6 +56,7 @@ def post_detail(request, year, month, day, post):
         {"post": post, "comment_form": CommentForm},
     )
 
+
 class PostListByTagview(ListView):
     context_object_name = "posts"
     paginate_by = 3
@@ -72,6 +73,7 @@ class PostListByTagview(ListView):
         data = super().get_context_data(**kwargs)
         data["tag"] = self.tag
         return data
+
 
 class PostShareView(SuccessMessageMixin, FormView):
     form_class = EmailPostForm
