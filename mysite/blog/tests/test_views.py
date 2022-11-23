@@ -16,18 +16,18 @@ class TestListView(ModelMixinTestCase, TestCase):
             {"page": 999, "posts": self.create_published_posts(4)},
         )
         self.assertEquals(
-            response.context["posts"].number,
-            response.context["posts"].paginator.page(2).number,
+            response.status_code,
+            404,
         )
 
-    def test_pagination_returns_first_page_if_page_is_empty(self):
+    def test_pagination_returns_first_page_if_string_is_passed_as_page(self):
         response = self.client.get(
             reverse("blog:post_list"),
-            {"page": "", "posts": self.create_published_posts(4)},
+            {"page": "String", "posts": self.create_published_posts(4)},
         )
         self.assertEquals(
-            response.context["posts"].number,
-            response.context["posts"].paginator.page(1).number,
+            response.status_code,
+            404,
         )
 
 
