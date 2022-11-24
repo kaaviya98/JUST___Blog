@@ -44,7 +44,7 @@ def post_detail(request, year, month, day, post):
         "blog/post/detail.html",
         {
             "post": post,
-            "comments": post.comments.filter(active=True),
+            "comments": post.comments.all(),
             "comment_form": comment_form,
         },
     )
