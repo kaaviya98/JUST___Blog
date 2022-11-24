@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, FormView
-from .models import Post
-from .forms import EmailPostForm
+from .models import Post, Comment
 from django.core.mail import send_mail
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.messages.views import SuccessMessageMixin
+from .forms import EmailPostForm, CommentForm
+from django.contrib import messages
 
 
 class PostListView(ListView):
@@ -12,6 +13,15 @@ class PostListView(ListView):
     context_object_name = "posts"
     paginate_by = 3
     template_name = "blog/post/list.html"
+
+
+def add_comment(request, comment_form, post):
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.post = post
+        comment.save()
+        messages.success(request, message="Comment added successfully")
+        return comment
 
 
 def post_detail(request, year, month, day, post):
@@ -23,7 +33,21 @@ def post_detail(request, year, month, day, post):
         publish__month=month,
         publish__day=day,
     )
-    return render(request, "blog/post/detail.html", {"post": post})
+
+    comment_form = add_comment(
+        request, CommentForm(data=request.POST or None), post
+    )
+    comment_form = CommentForm()
+
+    return render(
+        request,
+        "blog/post/detail.html",
+        {
+            "post": post,
+            "comments": post.comments.filter(active=True),
+            "comment_form": comment_form,
+        },
+    )
 
 
 class PostShareView(SuccessMessageMixin, FormView):
