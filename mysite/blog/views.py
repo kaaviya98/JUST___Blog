@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, FormView
-from .models import Post, Comment
+from .models import Post
 from django.core.mail import send_mail
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from .forms import EmailPostForm, CommentForm
 from django.contrib import messages

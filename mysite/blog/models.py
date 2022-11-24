@@ -13,12 +13,6 @@ class PublishedManager(models.Manager):
         )
 
 
-class CommentActiveManager(models.Manager):
-    def active_comments(self):
-        comments = Comment.objects.filter()
-        return comments
-
-
 class Post(models.Model):
     STATUS_CHOICES = (
         ("draft", "Draft"),
@@ -68,9 +62,6 @@ class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
-
-    objects = models.Manager()
-    activated = CommentActiveManager()
 
     class Meta:
         ordering = ("created",)
