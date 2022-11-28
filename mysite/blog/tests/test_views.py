@@ -13,7 +13,7 @@ class TestListView(ModelMixinTestCase, TestCase):
     def test_pagination_returns_404_if_page_out_of_range(self):
         response = self.client.get(
             reverse("blog:post_list"),
-            {"page": 999, "posts": self.create_published_posts(5)},
+            {"page": 999, "posts": self.create_published_posts(4)},
         )
         self.assertEquals(
             response.status_code,
@@ -65,4 +65,5 @@ class TestDetailView(ModelMixinTestCase, TestCase):
             ],
         )
         response = self.client.get(incorrect_post_detail_url)
+
         self.assertEqual(404, response.status_code)
