@@ -18,12 +18,12 @@
         Share this post
         </a>
     </p>
-    {% with comments.count as total_comments %}
+    {% with post.get_active_comments.count as total_comments %}
     <h2>
       {{ total_comments }} comment{{ total_comments|pluralize }}
     </h2>
   {% endwith %}
-  {% for comment in comments %}
+  {% for comment in post.get_active_comments %}
     <div class="comment">
       <p class="info">
         Comment {{ forloop.counter }} by {{ comment.name }}
