@@ -58,14 +58,17 @@ class Post(models.Model):
 
 
     def get_top_four_similar_posts(self):
-        post_tag_ids = self.tags.values_list("id", flat=True)
-        similar_posts = Post.published.filter(tags__in=post_tag_ids).exclude(
-            id=self.id
+        similar_posts = (
+            Post.published.filter(
+                tags__in=self.tags.values_list("id", flat=True)
+            )
+            .exclude(id=self.id)
+            .annotate(same_tags=Count("tags"))
+            .order_by("-same_tags", "-publish")[:4]
         )
-        return similar_posts.annotate(same_tags=Count("tags")).order_by(
-            "-same_tags", "-publish"
-        )[:4]
-        
+        return similar_posts
+
+
 class Comment(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name="comments"
