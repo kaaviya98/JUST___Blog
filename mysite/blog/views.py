@@ -8,7 +8,7 @@ from .forms import EmailPostForm, CommentForm
 from django.contrib import messages
 from taggit.models import Tag
 from django.contrib.postgres.search import SearchVector
-from blog.forms import EmailPostForm, CommentForm, SearchForm
+from blog.forms import SearchForm
 from django.contrib.postgres.search import TrigramSimilarity
 
 
@@ -110,25 +110,42 @@ class PostShareView(SuccessMessageMixin, FormView):
             recipient_list=[valid_data["to_email"]],
         )
 
-def post_search(request):
-    form = SearchForm()
-    query = None
-    results = []
 
-    if "query" in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            query = form.cleaned_data["query"]
-            results = (
-                Post.published.annotate(
-                    similarity=TrigramSimilarity("title", query),
-                )
-                .filter(similarity__gt=0.1)
-                .order_by("-similarity")
+class PostSearchView(FormView):
+    form_class = SearchForm
+    template_name = "blog/post/search.html"
+    success_url = reverse_lazy("blog:post_search")
+
+    def get_queryset(self):
+        self.q = self.request.query_params.get("query", None)
+
+    def dispatch(self, request, *args, **kwargs):
+        self.q = self.request.GET.get("query")
+        self.results = (
+            Post.published.annotate(
+                similarity=TrigramSimilarity("title", self.q),
             )
+            .filter(similarity__gt=0.1)
+            .order_by("-similarity")
+        )
+        return super().dispatch(request, args, kwargs)
 
-    return render(
-        request,
-        "blog/post/search.html",
-        {"form": form, "query": query, "results": results},
-    )
+    def form_valid(self, form):
+        self.obtain_results(form.cleaned_data)
+        return super(PostSearchView, self).form_valid(form)
+
+    def obtain_results(self, valid_data):
+        self.results = (
+            Post.published.annotate(
+                similarity=TrigramSimilarity("title", self.q),
+            )
+            .filter(similarity__gt=0.1)
+            .order_by("-similarity")
+        )
+        return super().obtain_results(valid_data)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["query"] = self.q
+        context["results"] = self.r
+        return context

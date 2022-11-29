@@ -5,7 +5,7 @@ from blog.views import (
     post_detail,
     PostShareView,
     PostListByTagview,
-    post_search
+    post_search,
 )
 from blog.tests.test_modelmixintestcase import ModelMixinTestCase
 
