@@ -53,7 +53,11 @@ def post_detail(request, year, month, day, post):
     return render(
         request,
         "blog/post/detail.html",
-        {"post": post, "comment_form": CommentForm},
+        {
+            "post": post,
+            "comment_form": CommentForm,
+            "similar_posts": post.get_top_four_similar_posts(),
+        },
     )
 
 
