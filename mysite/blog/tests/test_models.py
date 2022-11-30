@@ -19,11 +19,14 @@ class TestModelMethod(ModelMixinTestCase, TestCase):
             self.published_post.get_absolute_url(),
         )
 
-    def test_get_top_four_similar_posts_returns_None_for_post_without_tag(
+    def test_get_top_four_similar_posts_returns_empty_for_post_without_tag(
         self,
     ):
 
-        self.assertIsNone(self.draft_post.get_top_four_similar_posts().first())
+        self.assertQuerysetEqual(
+            Post.objects.none(),
+            self.published_post.get_top_four_similar_posts(),
+        )
 
     def test_get_top_four_similar_posts_returns_similar_posts_for_post_with_tag(
         self,

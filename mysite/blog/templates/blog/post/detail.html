@@ -19,7 +19,7 @@
     {% empty %}
         There are no similar posts yet.
     {% endfor %}
-    {% with comments.count as total_comments %}
+    {% with post.get_active_comments.count as total_comments %}
     <h2>
       {{ total_comments }} comment{{ total_comments|pluralize }}
     </h2>

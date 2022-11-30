@@ -56,7 +56,6 @@ class Post(models.Model):
     def get_active_comments(self):
         return self.comments.filter(active=True)
 
-
     def get_top_four_similar_posts(self):
         similar_posts = (
             Post.published.filter(
