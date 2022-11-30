@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, FormView
 from .models import Post
 from django.core.mail import send_mail
@@ -15,13 +15,28 @@ class PostListView(ListView):
     template_name = "blog/post/list.html"
 
 
-def add_comment(request, comment_form, post):
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id, status="published")
+
+    comment_form = CommentForm(data=request.POST or None)
     if comment_form.is_valid():
         comment = comment_form.save(commit=False)
         comment.post = post
         comment.save()
         messages.success(request, message="Comment added successfully")
-        return comment
+        return redirect(
+            "blog:post_detail",
+            post.publish.year,
+            post.publish.month,
+            post.publish.day,
+            post.slug,
+        )
+
+    return render(
+        request,
+        "blog/post/detail.html",
+        {"post": post, "comment_form": comment_form},
+    )
 
 
 def post_detail(request, year, month, day, post):
@@ -34,18 +49,10 @@ def post_detail(request, year, month, day, post):
         publish__day=day,
     )
 
-    comment_form = add_comment(
-        request, CommentForm(data=request.POST or None), post
-    )
-    comment_form = CommentForm()
-
     return render(
         request,
         "blog/post/detail.html",
-        {
-            "post": post,
-            "comment_form": comment_form,
-        },
+        {"post": post, "comment_form": CommentForm},
     )
 
 
